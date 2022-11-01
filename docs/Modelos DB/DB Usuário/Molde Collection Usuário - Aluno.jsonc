@@ -1,0 +1,56 @@
+// DB Users
+// Collection Usuário - Aluno
+
+{
+    "_id": "id do usuário",
+    "Nome": "Nome do usuário",
+    "Email": "Email do usuário",
+    "Senha": "Senha do usuário", // Usar o bcrypt
+    "Foto_perfil": "Url da foto de perfil",
+    "Tipo_usuario": "Aluno",
+    "Token ": "token JWT de login", // token JWT de login que esta em uso atualmente pelo usuário
+    "Data_cadastro": "Data de cadastro do usuário", // Preenchido automaticamente pelo backend
+    "Notificações_novas": [], // Lista das novas notificações que ainda não foram lidas
+    "Notificações_lidas": [], // Lista das notificações antigas que ja foram lindas
+    "Nickname": "nickname do usuário", // Nickname do usuário
+    "Pontos": 0, // Pontos do aluno
+    "Assinaturas": [   // Lista das assinaturas do aluno
+        {
+            "_id": "id da assinatura",
+            "Nome": "Nome da assinatura",
+            "Data_expiracao": "Data de expiração da assinatura"
+        }
+    ],
+    "courses_completed": [
+        {
+            "id_course": 321,
+            "course_name": "curso especialista 1",
+            "completion_date": "2022-07-15T14:22:58.579Z')",
+            "course_hours": "70 horas"
+        },
+        {
+            "id_course": 123,
+            "course_name": "curso especialista 2",
+            "completion_date": "ISODate('2022-07-15T14:22:58.579Z')",
+            "course_hours": "30 horas"
+        }
+    ],
+    "Cursos": [
+        {
+            "_id": "id do curso",
+            "Nome": "Nome do curso",
+            "Nome_professor": "Nome do professor",
+            "Finalizado": true, // Se o aluno já finalizou o curso
+            "Data_finalizacao": "Data de finalização do curso", // Data de finalização do curso
+            "Certificado": true, // Se o certificado do aluno pode ser gerado
+            "Aulas": [
+                {
+                    "_id": "id da aula",                    
+                    "Status": true // Se o aluno já assistiu a aula
+                }
+            ]
+
+        }
+    ]
+
+}

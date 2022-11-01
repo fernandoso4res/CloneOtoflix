@@ -1,0 +1,8 @@
+// DB Users
+// Collection Usuário - Grupo_Cursos
+
+{
+    "id": "id do grupo",
+    "Nome_do_grupo": "Nome do grupo",
+    "Descrição": "Descrição do grupo"
+}

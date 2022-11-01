@@ -1,0 +1,15 @@
+// DB Questões
+// Collection Questões 
+// Tipo: Multipla Escolha
+
+{
+    "_id": "id da questão",
+    "Categoria": "Categoria",
+    "Enunciado": "Pergunta",
+    "Imagem": "url da imagem", // url imagem (opcional)
+    "Video": "url do video", // url vídeo (opcional)
+    "Tipo" : "Múltipla Escolha",
+    "Resposta_correta": "Resposta",
+    "Explicação" : "Explicação",
+    "Alternativas":["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D", "Alternativa E"]
+}

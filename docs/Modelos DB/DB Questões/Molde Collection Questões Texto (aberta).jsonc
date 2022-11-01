@@ -1,0 +1,15 @@
+// DB Questões
+// Collection Questão
+//Tipo Texto(aberta)
+
+{
+    "_id": "id da questão",
+    "Categoria": "Categoria",
+    "Enunciado": "Pergunta",
+    "Imagem": "url da imagem", // url imagem (opcional)
+    "Video": "url do video", // url vídeo (opcional)
+    "Tipo" : "Texto"
+}
+
+
+

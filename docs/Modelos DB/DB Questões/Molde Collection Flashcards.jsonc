@@ -1,0 +1,9 @@
+// DB Questões
+// Collection Flashcards
+
+{
+    "_id": "id do flah card",
+    "Pergunta": "Pergunta",
+    "Resposta": "Resposta",
+    "Categoria": "Categoria"
+}

@@ -1,0 +1,3135 @@
+openapi: 3.0.0
+info:
+  title: API Otoflix Cursos
+  description: API de back-end para ser utilizada pelo Otoflix Cursos.
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/api/v1
+    description: Local server
+tags:
+  - name: Auth
+    description: Operações relativas a autenticação de usuários.
+  - name: Subscriptions
+    description: Operações relativas a assinaturas.
+  - name: Flashcards
+    description: Operações relativas aos flashcards.
+  - name: BenefitsClub
+    description: Operações relativas aos benefícios.
+  - name: Users
+    description: Operações relativas aos usuários.
+  - name: Certificates
+    description: Operações relativas aos certificados.
+  - name: Questions
+    description: Operações relativas as questões.
+  - name: Simulated
+    description: Operações relativas aos simulados de questões.
+  - name: Decks
+    description: Operações relativas aos decks de flashcards.
+  - name: Rankings
+    description: Operações relativas aos rankings.
+  - name: Students
+    description: Operações relativas apenas aos estudantes.
+  - name: Courses
+    description: Operações relativas aos cursos
+    
+paths:
+#Courses
+  /courses:
+    post:
+      tags:
+        - Courses
+      summary: Cadastro de cursos
+      description: Realiza cadastro de um curso
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/Courses'
+      responses:
+        '201':
+          description: Curso criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+
+                                                                                          
+#Auth
+  /auth/register-administrator:
+    post:
+      tags: 
+        - Auth
+      summary: Cadastro de administrador
+      description: Realizar o cadastro de um usuário do tipo administrador.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterUser'
+      responses:
+        '201':
+          description: Usuário cadastrado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /auth/register-student:
+    post:
+      tags: 
+        - Auth
+      summary: Cadastro de estudante
+      description: Realizar o cadastro de um usuário do tipo estudante.
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterUser'
+      responses:
+        '201':
+          description: Usuário cadastrado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+          headers: 
+            Set-Cookie:
+              $ref: '#/components/headers/SetCookie'
+        '400':
+          description: Erro ao criar usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /auth/register-teacher:
+    post:
+      tags: 
+        - Auth
+      summary: Cadastro de professor
+      description: Realizar o cadastro de um usuário do tipo professor.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterUser'
+      responses:
+        '201':
+          description: Usuário cadastrado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login do usuário
+      description: Valida o email e senha do usuário e realiza o login.
+      requestBody:
+        $ref: '#/components/requestBodies/Login'
+      responses:
+        '201':
+          description: Login realizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+          headers: 
+            Set-Cookie:
+              $ref: '#/components/headers/SetCookie'
+        '400':
+          description: Erro ao realizar login.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Usuário ou senha invalido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao realizar login.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /auth/change-password:
+    put:
+      tags: 
+        - Auth
+      summary: Troca de senha
+      description: Realiza a troca de senha do usuário logado.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/ChangePassword'
+      responses:
+        '200':
+          description: Senha alterada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'        
+        '400':
+          description: Erro ao realizar alteração de senha.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de autenticação.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao realizar alteração de senha.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /auth/forgot-password-send-token:
+    post:
+      tags: 
+        - Auth
+      summary: Envia token de alterações de senha - Esqueci minha senha
+      description: Envia para o email do usuário um token para realizar a alteração da senha.
+      requestBody:
+        $ref: '#/components/requestBodies/ForgotPasswordSendToken'
+      responses:
+        '202':
+          description: Token enviado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao envia token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao envia token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /auth/forgot-password-validate-token:
+    post:
+      tags: 
+        - Auth
+      summary: Valida token - Esqueci minha senha
+      description: Valida se o token é valido com o token informado.
+      requestBody:
+        $ref: '#/components/requestBodies/ForgotPasswordValidadeToken'
+      responses:
+        '200':
+          description: Token valido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao validar token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Token invalido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao validar token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /auth/forgot-password-change-password:
+    post:
+      tags: 
+        - Auth
+      summary: Troca a senha - Esqueci minha senha
+      description: Realiza a troca da senha através do email e do token validado.
+      requestBody:
+        $ref: '#/components/requestBodies/ForgotPasswordChangePassword'
+      responses:
+        '200':
+          description: Senha alterada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao realizar alteração de senha.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Email ou token invalido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao realizar alteração de senha.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+#Subscriptions  
+  /subscriptions:
+    get:
+      tags:
+        - Subscriptions
+      summary: Busca todas as assinaturas
+      description: Busca todas as assinaturas cadastradas no banco de dados.<br> Pode especificar quais campos retornar e quais filtros utilizar na busca através dos query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SubscriptionFields'
+        - $ref: '#/components/parameters/SubscriptionFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/Subscription'
+        '400':
+          description: Erro ao buscar as assinaturas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar as assinaturas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    post:
+      tags: 
+       - Subscriptions
+      summary: Cadastra uma assinatura
+      description: Cadastra uma nova assinatura no banco de dados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/Subscriptions'
+      responses:
+        '201':
+          description: Assinatura criada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'      
+  /subscriptions/{id}:
+    get:
+      tags:
+        - Subscriptions
+      summary: Busca uma assinatura
+      description: Busca uma assinatura cadastrada no banco de dados pelo id.<br> Pode especificar quais campos retornar no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SubscriptionId'
+        - $ref: '#/components/parameters/SubscriptionFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/SubscriptionId'
+        '400':
+          description: Erro ao buscar a assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar a assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    put:
+      tags:
+        - Subscriptions
+      summary: Atualiza uma assinatura
+      description: Atualiza uma assinatura cadastrada no banco de dados pelo id.<br>Todos os campos do body são obrigatórios.<br>Se a assinatura não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SubscriptionId'
+      requestBody:
+        $ref: '#/components/requestBodies/Subscriptions'
+      responses:
+        '200':
+          description: Assinatura atualizada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar a assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Assinatura não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar a assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+    delete:
+      tags:
+        - Subscriptions
+      summary: Deleta uma assinatura
+      description: Deleta uma assinatura cadastrada no banco de dados pelo id.<br>Se a assinatura não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '204':
+          description: Assinatura deletada com sucesso.
+        '400':
+          description: Erro ao deletar a assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Assinatura não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar a assinatura.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+#Flashcards
+  /flashcards:
+    get:
+      tags:
+        - Flashcards
+      summary: Busca todos os flashcards
+      description: Busca todos os flashcards cadastrados no banco de dados.<br> Pode especificar quais campos retornar e quais filtros utilizar na busca através dos query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/FlashcardFields'
+        - $ref: '#/components/parameters/FlashcardFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/Flashcards'
+        '400':
+          description: Erro ao buscar os flashcards.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar os flashcards.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    post:
+      tags:
+      - Flashcards
+      summary: Cadastra um flashcard
+      description: Cadastra um novo flashcard no banco de dados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/Flashcards'
+      responses:
+        '201':
+          description: Flashcard criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /flashcards/{id}:
+    get:
+      tags:
+        - Flashcards
+      summary: Busca um flashcard
+      description: Busca um flashcard cadastrado no banco de dados pelo id.<br> Pode especificar quais campos retornar no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/FlashcardId'
+        - $ref: '#/components/parameters/FlashcardFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/FlashcardsId'
+        '400':
+          description: Erro ao buscar o flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar o flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    put:
+      tags:
+        - Flashcards
+      summary: Atualiza um flashcard
+      description: Atualiza um flashcard cadastrado no banco de dados pelo id.<br>Todos os campos do body são obrigatórios.<br>Se o flashcard não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/FlashcardId'
+      requestBody:
+        $ref: '#/components/requestBodies/Flashcards'
+      responses:
+        '200':
+          description: Flashcard atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar o flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Flashcard não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar o flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+    delete:
+      tags:
+        - Flashcards
+      summary: Deleta um flashcard
+      description: Deleta um flashcard cadastrado no banco de dados pelo id.<br>Se o flashcard não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/FlashcardId'
+      responses:
+        '204':
+          description: Flashcard deletado com sucesso.
+        '400':
+          description: Erro ao deletar o flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Flashcard não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar o flashcard.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+#BenefitsClub
+  /benefits_club:
+    get:
+      tags:
+        - BenefitsClub
+      summary: Busca todos os benefícios
+      description: Busca todos os benefícios cadastrados no banco de dados.<br> Pode especificar quais campos retornar e quais filtros utilizar na busca através dos query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/BenefitsClubFields'
+        - $ref: '#/components/parameters/BenefitsClubFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/BenefitsClub'
+        '400':
+          description: Erro ao buscar os benefícios.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar os benefícios.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    post:
+      tags:
+      - BenefitsClub
+      summary: Cadastra um benefício
+      description: Cadastra um novo benefício no banco de dados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/BenefitsClub'
+      responses:
+        '201':
+          description: Benefício criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+  /benefits_club/{id}:
+    get:
+      tags:
+        - BenefitsClub
+      summary: Busca um benefício
+      description: Busca um benefício cadastrado no banco de dados pelo id.<br> Pode especificar quais campos retornar no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/BenefitsClubId'
+        - $ref: '#/components/parameters/BenefitsClubFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/BenefitsClubId'
+        '400':
+          description: Erro ao buscar o benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar o benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    put:
+      tags:
+        - BenefitsClub
+      summary: Atualiza um benefício
+      description: Atualiza um benefício cadastrado no banco de dados pelo id.<br>Todos os campos do body são obrigatórios.<br>Se o benefício não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/BenefitsClubId'
+      requestBody:
+        $ref: '#/components/requestBodies/BenefitsClub'
+      responses:
+        '200':
+          description: Flashcard atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar o benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Benefício não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar o benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+    delete:
+      tags:
+        - BenefitsClub
+      summary: Deleta um benefício
+      description: Deleta um benefício cadastrado no banco de dados pelo id.<br>Se o benefício não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/BenefitsClubId'
+      responses:
+        '204':
+          description: Benefício deletado com sucesso.
+        '400':
+          description: Erro ao deletar o benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Benefício não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar o benefício.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+#Users
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Busca todos os usuários
+      description: Busca todos os usuários cadastrados no banco de dados.<br> Pode especificar quais campos retornar.<br>Pode especificar o tipo de usuário através do query param 'user_type'.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/UsersFields'
+        - $ref: '#/components/parameters/UsersUserType'
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '400':
+          description: Erro ao buscar os flashcards.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar os flashcards.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    delete:
+      tags: 
+        - Users
+      summary: Deleta vários usuários
+      description: Deleta do banco de dados os usuários especificados no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/DeleteUsers'
+      responses:
+        '204':
+          description: Usuários deletados com sucesso.
+        '400':
+          description: Erro ao deletar os usuários.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar os usuários.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Busca um usuário
+      description: Busca um usuário cadastrado no banco de dados pelo id.<br> Pode especificar quais campos retornar no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/UsersId'
+        - $ref: '#/components/parameters/UsersFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/UsersId'
+        '400':
+          description: Erro ao buscar o usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar o usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    delete:
+      tags:
+        - Users
+      summary: Deleta um usuário
+      description: Deleta um usuário cadastrado no banco de dados pelo id.<br>Se o usuário não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/UsersId'
+      responses:
+        '204':
+          description: Usuário deletado com sucesso.
+        '400':
+          description: Erro ao deletar o usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Usuário não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar o usuário.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /users/count:
+    get:
+      tags:
+        - Users
+      summary: Conta todos os usuários
+      description: Retorna a quantidade de usuários cadastrados no banco de dados.<br> Pode especificar o tipo de usuário através do query param 'user_type'.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/UsersUserType'
+      responses:
+        '200':
+          $ref: '#/components/responses/UsersCount'
+        '400':
+          description: Erro ao buscar os flashcards.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar os flashcards.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /users/activate-deactivate:
+    patch:
+      tags:
+        - Users
+      summary: Ativa / Desativa usuários
+      description: Ativa / Desativa os usuários especificados no array 'ids'.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/UsersActivateDeactivate'
+      responses:
+        '200':
+          description: Usuários atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar os usuários.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar os usuários.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+  /users/profile-picture:
+    patch:
+      tags:
+        - Users
+      summary: Altera a foto de perfil
+      description: Altera a foto de perfil do usuário.<br>Extensões permitidas:&nbsp;'jpg', 'jpeg', 'png'
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/UsersProfilePicture'
+      responses:
+        '200':
+          description: Foto de perfil atualizada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar a foto de perfil.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar a foto de perfil.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+  /users/profile-infos:
+    patch:
+      tags:
+        - Users
+      summary: Atualiza informações de perfil
+      description: Atualiza as informações de perfil de um usuário.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/UsersProfileInfos'
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar os usuários.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar os usuários.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+#Certificates
+  /certificates:
+    get:
+      tags:
+        - Certificates
+      summary: Gera certificado
+      description: Gera um certificado no formato PDF. 
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/Certificates'
+      responses:
+        '200':
+          $ref: '#/components/responses/Certificates'
+        '400':
+          description: Erro ao gerar certificado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao gerar certificado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+#Questions
+  /questions:
+    get:
+      tags:
+        - Questions
+      summary: Busca todas as questões
+      description: Busca todas as questões cadastrados no banco de dados.<br> Pode especificar quais campos retornar e quais filtros utilizar na busca através dos query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/QuestionsFields'
+        - $ref: '#/components/parameters/QuestionsFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/Questions'
+        '400':
+          description: Erro ao buscar as questões.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar as questões.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /questions/multiple-choice-question:
+    post:
+      tags:
+      - Questions
+      summary: Cadastra uma questão de múltipla escolha
+      description: Cadastra uma nova questão de múltipla escolha no banco de dados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/QuestionMultipleChoice'
+      responses:
+        '201':
+          description: Questão criada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /questions/open-question:
+    post:
+      tags:
+      - Questions
+      summary: Cadastra uma questão aberta
+      description: Cadastra uma nova questão aberta no banco de dados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/QuestionOpen'
+      responses:
+        '201':
+          description: Questão criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+  /questions/{id}:
+    get:
+      tags:
+        - Questions
+      summary: Busca uma questão
+      description: Busca uma questão cadastrado no banco de dados pelo id.<br> Pode especificar quais campos retornar no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/QuestionsId'
+        - $ref: '#/components/parameters/QuestionsFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/QuestionsId'
+        '400':
+          description: Erro ao buscar a questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar a questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    put:
+      tags:
+        - Questions
+      summary: Atualiza uma questão
+      description: Atualiza uma questão cadastrada no banco de dados pelo id.<br>Todos os campos do body são obrigatórios.<br>Se a questão não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/QuestionsId'
+      requestBody:
+        $ref: '#/components/requestBodies/Question'
+      responses:
+        '200':
+          description: Questão atualizada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar a questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Questão não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar a questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+    delete:
+      tags:
+        - Questions
+      summary: Deleta uma questão
+      description: Deleta uma questão cadastrada no banco de dados pelo id.<br>Se a questão não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/QuestionsId'
+      responses:
+        '204':
+          description: Questão deletada com sucesso.
+        '400':
+          description: Erro ao deletar a questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Questão não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar a questão.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+#Simulated
+  /simulated:
+    get:
+      tags:
+        - Simulated
+      summary: Busca todos os simulados
+      description: Busca todos os simulados cadastrados no banco de dados.<br> Pode especificar quais campos retornar e quais filtros utilizar na busca através dos query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SimulatedFields'
+        - $ref: '#/components/parameters/SimulatedFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/Simulated'
+        '400':
+          description: Erro ao buscar os simulados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar os simulados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    post:
+      tags:
+      - Simulated
+      summary: Cadastra um simulado
+      description: Cadastra um novo simulado no banco de dados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/Simulated'
+      responses:
+        '201':
+          description: Simulado criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'   
+  /simulated/{id}:
+    get:
+      tags:
+        - Simulated
+      summary: Busca um simulado
+      description: Busca um simulado cadastrado no banco de dados pelo id.<br> Pode especificar quais campos retornar no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SimulatedId'
+        - $ref: '#/components/parameters/SimulatedFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/SimulatedId'
+        '400':
+          description: Erro ao buscar o simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar o simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    put:
+      tags:
+        - Simulated
+      summary: Atualiza um simulado
+      description: Atualiza um simulado cadastrado no banco de dados pelo id.<br>Todos os campos do body são obrigatórios.<br>Se o simulado não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SimulatedId'
+      requestBody:
+        $ref: '#/components/requestBodies/Simulated'
+      responses:
+        '200':
+          description: Simulado atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar o simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Simulado não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar o simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+    delete:
+      tags:
+        - Simulated
+      summary: Deleta um simulado
+      description: Deleta um simulado cadastrado no banco de dados pelo id.<br>Se o simulado não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/SimulatedId'
+      responses:
+        '204':
+          description: Simulado deletado com sucesso.
+        '400':
+          description: Erro ao deletar o simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Simulado não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar o simulado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+#Decks
+  /decks:
+    get:
+      tags:
+        - Decks
+      summary: Busca todos os decks
+      description: Busca todos os decks de flashcards cadastrados no banco de dados.<br> Pode especificar quais campos retornar e quais filtros utilizar na busca através dos query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/DecksFields'
+        - $ref: '#/components/parameters/DecksFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/Decks'
+        '400':
+          description: Erro ao buscar os decks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar os decks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    post:
+      tags:
+      - Decks
+      summary: Cadastra um deck
+      description: Cadastra um novo deck de flashcards no banco de dados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/Decks'
+      responses:
+        '201':
+          description: Deck criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
+        '400':
+          description: Erro ao criar deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao criar deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+  /decks/{id}:
+    get:
+      tags:
+        - Decks
+      summary: Busca um deck
+      description: Busca um deck de flashcards cadastrado no banco de dados pelo id.<br> Pode especificar quais campos retornar no query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/DecksId'
+        - $ref: '#/components/parameters/DecksFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/DecksId'
+        '400':
+          description: Erro ao buscar o deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar o deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+    put:
+      tags:
+        - Decks
+      summary: Atualiza um deck
+      description: Atualiza um deck de flashcards cadastrado no banco de dados pelo id.<br>Todos os campos do body são obrigatórios.<br>Se o deck não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/DecksId'
+      requestBody:
+        $ref: '#/components/requestBodies/Decks'
+      responses:
+        '200':
+          description: Deck atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao atualizar o deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Deck não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao atualizar o deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico' 
+    delete:
+      tags:
+        - Decks
+      summary: Deleta um deck
+      description: Deleta um deck de flashcards cadastrado no banco de dados pelo id.<br>Se o deck não existir sera retornado um erro 404.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/DecksId'
+      responses:
+        '204':
+          description: Deck deletado com sucesso.
+        '400':
+          description: Erro ao deletar o deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '404':
+          description: Deck não existe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao deletar o deck.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+
+#Rankings
+  /rankings:
+    get:
+      tags:
+        - Rankings
+      summary: Busca o ranking
+      description: Busca um dos tipos de ranking disponiveis baseado no query param ranking-type.<br> Pode especificar quais campos retornar e quais filtros utilizar na busca através dos query param.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      parameters:
+        - $ref: '#/components/parameters/RankingsRankingType'
+      responses:
+        '200':
+          $ref: '#/components/responses/Rankings'
+        '400':
+          description: Erro ao buscar os decks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao buscar os decks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+
+#Students
+  /students/add-points:
+    post:
+      tags:
+        - Students
+      summary: Adiciona pontos a um usuario
+      description: Esta operação adiciona pontos ao estudante logado.<br>Podem ser adicionados pontos tando ao ranking geral, quanto ao ranking de simulados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/StudentsAddPoints'
+      responses:
+        '201':
+          description: Pontos adicionados com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao adicionar pontos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao adicionar pontos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+
+  /students/add-points-by-id:
+    post:
+      tags:
+        - Students
+      summary: Adiciona pontos a um usuario pelo id
+      description: Esta operação adiciona pontos ao atraz do id.<br>Podem ser adicionados pontos tando ao ranking geral, quanto ao ranking de simulados.
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/StudentsAddPointsById'
+      responses:
+        '201':
+          description: Pontos adicionados com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '400':
+          description: Erro ao adicionar pontos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '401':
+          description: Erro de authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+        '500':
+          description: Erro ao adicionar pontos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseGenerico'
+      
+
+    
+components:
+  securitySchemes:
+    access_token_cookie:
+      type: apiKey
+      in: cookie
+      name: access_token_cookie
+    X-CSRF-TOKEN:
+      type: apiKey
+      in: header
+      name: X-CSRF-TOKEN
+  
+  headers:
+    #Responses
+    SetCookie:
+      description: Cookies JWT (access_token_cookie e csrf_access_token)
+      schema:
+        allOf:
+          - $ref: '#/components/schemas/SetCsrfAccessTokenCookie'
+          - $ref: '#/components/schemas/SetAccessTokenCookie'
+
+  requestBodies:
+    RegisterUser:
+      description: Body com as informações do usuário.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              first_name:
+                description: Nome do usuário.
+                type: string
+                example: João
+              last_name:
+                description: Sobrenome do usuário.
+                type: string
+                example: Silva
+              email:
+                description: E-mail do usuário.
+                type: string
+                example: teste@email.com
+              nickname:
+                description: Nickname do usuário.
+                type: string
+                example: Joãozinho
+              password:
+                description: Senha do usuário.
+                type: string
+                example: MinhaSenha@123
+    Login:
+      description: Body com as informações de email e senha do usuário.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: E-mail do usuário.
+                type: string
+                example: teste@email.com
+              password:
+                description: Senha do usuário.
+                type: string
+                example: MinhaSenha@123
+    ChangePassword:
+      description: Body com a senha atual e a nova senha.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              password:
+                description: Senha atual do usuário.
+                type: string
+                example: MinhaSenha@123
+              new_password:
+                description: Nova senha do usuário.
+                type: string
+                example: MinhaNovaSenha@321
+    ForgotPasswordSendToken:
+      description: Body com o email do usuário.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: E-mail do usuário.
+                type: string
+                example: teste@email.com
+    ForgotPasswordValidadeToken:
+      description: Body com o email do usuário e o token enviado.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: E-mail do usuário.
+                type: string
+                example: teste@email.com
+              token:
+                description: Token de troca de senha.
+                type: string
+                example: 123456
+    ForgotPasswordChangePassword:
+      description: Body com o email do usuário e o token enviado.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: E-mail do usuário.
+                type: string
+                example: teste@email.com
+              token:
+                description: Token de troca de senha.
+                type: string
+                example: 123456
+              new_password:
+                description: Nova senha do usuário.
+                type: string
+                example: MinhaNovaSenha@321
+    
+    Subscriptions:
+      description: Body com as informações da assinatura que sera criada.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              subscription_name:
+                description: Nome da assinatura.
+                type: string
+                example: Nome da assinatura
+              subscription_description:
+                description: Descrição da assinatura.
+                type: string
+                example: Descrição da assinatura.
+              subscription_price:
+                description: Preço da assinatura.
+                type: number
+                example: 1200.99
+              subscription_duration_unit:
+                description: DuraçãoUnidade de medida da duração da assinatura (dia(a), mes(es) ano(s)).
+                type: string
+                enum: 
+                  - dia(s)
+                  - mes(es)
+                  - ano(s)
+              subscription_duration_value:
+                description: Numero inteiro que representa o a duração da assinatura junto com a unidade.
+                type: integer
+                example: 20
+              subscription_permissions:
+                description: Permissões da assinatura.
+                type: object
+                properties:
+                  certificates:
+                    type: boolean
+                  analysis:
+                    type: boolean
+                  benefits_club:
+                    type: boolean
+                  flashcards:
+                    type: boolean
+                  simulations:
+                    type: boolean
+                  questions_database:
+                    type: boolean
+                  images_database:
+                    type: boolean
+                  mentoring:
+                    type: boolean
+                  monitoring:
+                    type: boolean
+                  simulation_ranking:
+                    type: boolean
+                  general_ranking:
+                    type: boolean
+                  courses:
+                    description: Array cursos que tem acesso com a assinatura (se o array estiver vazio não tera acesso a nenhum curso).
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        course_id:
+                          description: Id do curso na collection de course.
+                          type: string
+                          example: 62b59b38d94c93885bb50738
+                        course_name:
+                          description: Nome do curso na collection de course.
+                          type: string
+                          example: Nome do curso
+    
+    Flashcards:
+      description: Body com as informações do flashcard que sera criado.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              question:
+                description: Pergunta do flashcard.
+                type: string
+                example: Pergunta?
+              answer:
+                description: Resposta do flashcard.
+                type: string
+                example: Resposta.
+              category:
+                description: Categoria do flashcard.
+                type: string
+                example: Categoria
+    
+    BenefitsClub:
+      description: Body com as informações do benefício que sera criado.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              benefit_name:
+                description: Nome do benefício.
+                type: string
+                example: Nome do benefício
+              benefit_description:
+                description: Descrição do benefício.
+                type: string
+                example: Descrição do benefício
+              benefit_end_date:
+                description: Data de finalização do benefício.
+                type: string
+                example: 2022-09-15
+              discount_percentage:
+                description: Porcentagem de desconto do benefício.
+                type: string
+                example: 10%
+              saved_amount:
+                description: Valor economizado com o benefício.
+                type: number
+                example: 50.99
+              benefit_link:
+                description: Link do benefício.
+                type: string
+                example: link do beneficio
+    
+    UsersActivateDeactivate:
+      description: Body com os ids dos usuários a serem alterados e o valor da alteração.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ids:
+                description: Array com ids a serem alterados.
+                type: array
+                items:
+                  type: string
+                  example: 62ba08afa859ec609b02ea25
+              is_active:
+                description: Campo a ser alterado.
+                type: boolean
+                example: true
+    UsersProfilePicture:
+      description: Imagem que sera utilizada como foto de perfil.
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              file:
+                description: Imagem que sera utilizada como foto de perfil.
+                type: string
+                format: binary
+    UsersProfileInfos:
+      description: Body com as informações a serem alteradas.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              first_name:
+                description: Nome do usuário.
+                type: string
+                example: João
+              last_name:
+                description: Sobrenome do usuário.
+                type: string
+                example: Silva
+              email:
+                description: E-mail do usuário.
+                type: string
+                example: teste@email.com
+              nickname:
+                description: Nickname do usuário.
+                type: string
+                example: Joãozinho
+    
+    Question:
+      description: Body com as informações da questão as ser criada/editada.
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/QuestionOpenPut'
+              - $ref: '#/components/schemas/QuestionMultipleChoicePut'
+    
+    QuestionOpen:
+      description: Body com as informações da questão as ser criada/editada.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              category:
+                description: Categoria da questão.
+                type: string
+                example: Categoria
+              question:
+                description: Pergunta da questão.
+                type: string
+                example: Pergunta?
+    QuestionMultipleChoice:
+      description: Body com as informações da questão as ser criada/editada.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              category:
+                description: Categoria da questão.
+                type: string
+                example: Categoria
+              question:
+                description: Pergunta da questão.
+                type: string
+                example: Pergunta?
+              correct_answer:
+                description: Categoria da questão.
+                type: string
+                example: RespostaA.
+              explanation:
+                description: Explicação da resposta da questão.
+                type: string
+                example: Explicação
+              choices:
+                description: Alternativas da questão.
+                type: array
+                minItems: 5
+                maxItems: 5
+                items:
+                  type: string
+    
+    Simulated:
+      description: Body com as informações do simulado que sera criado.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                description: Titulo do simulado.
+                type: string
+                example: Simulado ABC
+              questions:
+                description: Lista de questões (Id) que fara parte do simulado.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      description: Id da questão.
+                      type: string
+                      example: 62b59b38d94c93885bb50738
+                    points:
+                      description: Valor de pontos da questão no simulado.
+                      type: number
+                      example: 1.0
+              duration:
+                description: Duração do simulado.
+                type: string
+                example: 2:30
+    
+    Decks:
+      description: Body com as informações do deck que sera criado.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                description: Titulo do deck.
+                type: string
+                example: Deck ABC
+              flashcards:
+                description: Lista de flashcards (Id) que fara parte do deck.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      description: Id do flashcard.
+                      type: string
+                      example: 62b59b38d94c93885bb50738
+
+    StudentsAddPoints:
+      description: Body com as informações para adicionar os pontos.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              points:
+                description: Quantidade de pontos que sera adicionados ao aluno.
+                type: integer
+              ranking_type:
+                description: Tipo de ranking ao qual sera adicionado a pontuação.
+                type: string
+                enum: 
+                  - general_ranking
+                  - simulated_ranking
+    
+    StudentsAddPointsById:
+      description: Body com as informações para adicionar os pontos.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                description: Id do aluno.
+                type: string
+                example: 62b59b38d94c93885bb50738
+              points:
+                description: Quantidade de pontos que sera adicionados ao aluno.
+                type: integer
+              ranking_type:
+                description: Tipo de ranking ao qual sera adicionado a pontuação.
+                type: string
+                enum: 
+                  - general_ranking
+                  - simulated_ranking
+              
+
+
+  responses:
+    Subscription:
+      description: Array de assinaturas.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Subscription'
+    SubscriptionId:
+      description: Informações da assinatura buscada.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Subscription'
+    
+    Flashcards:
+      description: Array de flashcards.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Flashcards'
+    FlashcardsId:
+      description: Informações do flashcards buscado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Flashcards'
+    
+    BenefitsClub:
+      description: Array de benefícios.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BenefitsClub'
+    BenefitsClubId:
+      description: Informações do benefício buscado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BenefitsClub'
+    
+    Users:
+      description: Array de usuários.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Users'
+    UsersId:
+      description: Informações do usuário buscado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Users'
+    UsersCount:
+      description: Response com a quantidade e usuários cadastrados no banco de dados de acordo com o 'user_type' (se user_type não especificado retorna a quantidade total de usuários cadastrados no banco de dados).
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                description: Quantidade e usuários.
+                type: integer
+                example: 5
+    
+    Certificates:
+      description: Arquivo de certificado no formato PDF.
+      content:
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+    
+    Questions:
+      description: Array de questões.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              oneOf:
+                - $ref: '#/components/schemas/QuestionOpen'
+                - $ref: '#/components/schemas/QuestionMultipleChoice'
+    QuestionsId:
+      description: Informações da questão buscada.
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/QuestionOpen'
+              - $ref: '#/components/schemas/QuestionMultipleChoice'
+    
+    Simulated:
+      description: Array de simulados.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Simulated'
+    SimulatedId:
+      description: Informações do simulado buscado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Simulated'          
+    
+    Decks:
+      description: Array de decks.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Deck'
+    DecksId:
+      description: Informações do deck buscado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Deck'
+
+    Rankings:
+      description: Informações do ranking buscado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Ranking'
+
+  parameters:
+    SubscriptionFields:
+      name: fields
+      in: query
+      description: Especifica os campos a serem retornados no response.<br>Os campos devem ser escritos em uma única linha separados por virgulas e sem espaços.
+      required: false
+      schema:
+        type: string
+        example: id,subscription_name,subscription_price
+    SubscriptionFilter:
+      name: filter
+      in: query
+      description: Filtros a serem utilizados na busca.
+      required: false
+      style: deepObject
+      explode: true
+      allowReserved: true
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          id: 62ba08afa859ec609b02ea25
+          subscription_name: Nome da assinatura
+          subscription_description: Descrição da assinatura
+          subscription_price: 1200.99,
+          subscription_duration_unit: dia(s)
+          subscription_duration_value: 20
+          subscription_permissions.certificates: true
+          subscription_permissions.analysis: true
+          subscription_permissions.benefits_club: true
+          subscription_permissions.flashcards: true
+          subscription_permissions.simulations: true
+          subscription_permissions.questions_database: true
+          subscription_permissions.images_database: true
+          subscription_permissions.mentoring: true
+          subscription_permissions.monitoring: true
+          subscription_permissions.simulation_ranking: true
+          subscription_permissions.general_ranking: true
+          subscription_permissions.courses.course_id: 62b59b38d94c93885bb50738
+          subscription_permissions.courses.course_name: Nome do curso
+    SubscriptionId:
+      name: id
+      in: path
+      description: Id da assinatura.
+      required: true
+      schema:
+        type: string
+        example: 62ba08afa859ec609b02ea25
+    
+    FlashcardFields:
+      name: fields
+      in: query
+      description: Especifica os campos a serem retornados no response.<br>Os campos devem ser escritos em uma única linha separados por virgulas e sem espaços.
+      required: false
+      schema:
+        type: string
+        example: id,question,answer,category
+    FlashcardFilter:
+      name: filter
+      in: query
+      description: Filtros a serem utilizados na busca.
+      required: false
+      style: deepObject
+      explode: true
+      allowReserved: true
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          id: 62ba08afa859ec609b02ea25,62ba08afa859ec609b02ea30
+          question: Pergunta?
+          answer: Resposta.
+          category: Categoria
+    FlashcardId:
+      name: id
+      in: path
+      description: Id do flashcard.
+      required: true
+      schema:
+        type: string
+        example: 62ba08afa859ec609b02ea25
+    
+    BenefitsClubFields:
+      name: fields
+      in: query
+      description: Especifica os campos a serem retornados no response.<br>Os campos devem ser escritos em uma única linha separados por virgulas e sem espaços.
+      required: false
+      schema:
+        type: string
+        example: id,benefit_name,benefit_description
+    BenefitsClubFilter:
+      name: filter
+      in: query
+      description: Filtros a serem utilizados na busca.
+      required: false
+      style: deepObject
+      explode: true
+      allowReserved: true
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          id: 62ba08afa859ec609b02ea25,62ba08afa859ec609b02ea30
+          benefit_name: Nome do benefício
+          benefit_description: Descrição do benefício
+          benefit_end_date: 2022-09-15
+          discount_percentage: 10%
+          saved_amount  : 50.99
+          benefit_link: link do beneficio
+    BenefitsClubId:
+      name: id
+      in: path
+      description: Id do benefício.
+      required: true
+      schema:
+        type: string
+        example: 62ba08afa859ec609b02ea25
+    
+    UsersFields:
+      name: fields
+      in: query
+      description: Especifica os campos a serem retornados no response.<br>Os campos devem ser escritos em uma única linha separados por virgulas e sem espaços.
+      required: false
+      schema:
+        type: string
+        example: id,email,first_name,last_name
+    UsersUserType:
+      name: user_type
+      in: query
+      description: Filtro que define o tipo de usuário a buscar.
+      required: false
+      schema:
+        type: string
+        enum: 
+         - student
+         - teacher
+         - administrator
+    UsersId:
+      name: id
+      in: path
+      description: Id do usuário.
+      required: true
+      schema:
+        type: string
+        example: 62ba08afa859ec609b02ea25
+    DeleteUsers:
+      name: id
+      in: query
+      description: Ids dos usuários que serão deletados.
+      required: false
+      style: spaceDelimited
+      explode: true
+      allowReserved: true
+      schema:
+        type: array
+        items:
+          type: string
+    
+    Certificates:
+      name: course_id
+      in: query
+      description: Id do curso.
+      required: false
+      schema:
+        type: string
+        example: 62d1bc356edc5bcca54a49a4
+    
+    QuestionsFields:
+      name: fields
+      in: query
+      description: Especifica os campos a serem retornados no response.<br>Os campos devem ser escritos em uma única linha separados por virgulas e sem espaços.
+      required: false
+      schema:
+        type: string
+        example: id,category,question,choices,question_type
+    QuestionsFilter:
+      name: filter
+      in: query
+      description: Filtros a serem utilizados na busca.
+      required: false
+      style: deepObject
+      explode: true
+      allowReserved: true
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          id: 62ba08afa859ec609b02ea25,62ba08afa859ec609b02ea30
+          category: Categoria
+          question: Pergunta?
+          choices: Escolhas
+          correct_answer: Resposta
+          explanation: Explicação
+          question_type: multiple_choice_question ou open_question
+    QuestionsId:
+      name: id
+      in: path
+      description: Id da questão.
+      required: true
+      schema:
+        type: string
+        example: 62ba08afa859ec609b02ea25
+  
+    SimulatedFields:
+      name: fields
+      in: query
+      description: Especifica os campos a serem retornados no response.<br>Os campos devem ser escritos em uma única linha separados por virgulas e sem espaços.
+      required: false
+      schema:
+        type: string
+        example: id,question,duration,categories
+    SimulatedFilter:
+      name: filter
+      in: query
+      description: Filtros a serem utilizados na busca.
+      required: false
+      style: deepObject
+      explode: true
+      allowReserved: true
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          id: 62ba08afa859ec609b02ea25,62ba08afa859ec609b02ea30
+          title: Simulado ABC
+          questions.id: 62ba08afa859ec609b02ea30
+          questions.points: 1 
+          duration: 2:30
+          categories: CategoriaA
+    SimulatedId:
+      name: id
+      in: path
+      description: Id do simulado.
+      required: true
+      schema:
+        type: string
+        example: 62ba08afa859ec609b02ea25
+    
+    DecksFields:
+      name: fields
+      in: query
+      description: Especifica os campos a serem retornados no response.<br>Os campos devem ser escritos em uma única linha separados por virgulas e sem espaços.
+      required: false
+      schema:
+        type: string
+        example: id,question,categories
+    DecksFilter:
+      name: filter
+      in: query
+      description: Filtros a serem utilizados na busca.
+      required: false
+      style: deepObject
+      explode: true
+      allowReserved: true
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          id: 62ba08afa859ec609b02ea25,62ba08afa859ec609b02ea30
+          title: Simulado ABC
+          flashcards.id: 62ba08afa859ec609b02ea30
+          categories: CategoriaA
+    DecksId:
+      name: id
+      in: path
+      description: Id do deck.
+      required: true
+      schema:
+        type: string
+        example: 62ba08afa859ec609b02ea25
+    
+
+    RankingsRankingType:
+      name: ranking_type
+      in: query
+      description: Filtro que define o tipo de ranking a buscar.
+      required: false
+      schema:
+        type: string
+        enum: 
+         - general_ranking
+         - simulated_ranking
+         
+  
+  schemas:
+    
+    #Cookies
+    SetAccessTokenCookie:
+      type: string
+      example: access_token_cookie=eyJ0eXAiOiJKV1QiLCJnRSbw; HttpOnly; Path=/
+    SetCsrfAccessTokenCookie:
+      type: string
+      example: csrf_access_token=fc6a7ed6-35cc-4d1e-9466-cb2e3e7272fb
+    
+    #Responses  
+    ResponseGenerico:
+      type: object
+      properties:
+        msg:
+          type: string
+    
+    PostResponseGenerico:
+      type: object
+      properties:
+        id:
+          type: string
+        msg:
+          type: string
+    
+    Subscription:
+      type: object
+      description: Objeto assinatura.
+      properties:
+        id:
+          description: Id da assinatura.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        subscription_name:
+          description: Nome da assinatura.
+          type: string
+          example: Nome da assinatura
+        subscription_description:
+          description: Descrição da assinatura.
+          type: string
+          example: Descrição da assinatura.
+        subscription_price:
+          description: Preço da assinatura.
+          type: number
+          example: 1200.99
+        subscription_duration_unit:
+          description: DuraçãoUnidade de medida da duração da assinatura (dia(a), mes(es) ano(s)).
+          type: string
+          enum: 
+            - dia(s)
+            - mes(es)
+            - ano(s)
+        subscription_duration_value:
+          description: Numero inteiro que representa a duração da assinatura junto com a unidade.
+          type: integer
+          example: 20
+        subscription_permissions:
+          description: Permissões da assinatura.
+          type: object
+          properties:
+            certificates:
+              type: boolean
+            analysis:
+              type: boolean
+            benefits_club:
+              type: boolean
+            flashcards:
+              type: boolean
+            simulations:
+              type: boolean
+            questions_database:
+              type: boolean
+            images_database:
+              type: boolean
+            mentoring:
+              type: boolean
+            monitoring:
+              type: boolean
+            simulation_ranking:
+              type: boolean
+            general_ranking:
+              type: boolean
+            courses:
+              description: Array cursos que tem acesso com a assinatura (se o array estiver vazio não tera acesso a nenhum curso).
+              type: array
+              items:
+                type: object
+                properties:
+                  course_id:
+                    description: Id do curso na collection de course.
+                    type: string
+                    example: 62b59b38d94c93885bb50738
+                  course_name:
+                    description: Nome do curso na collection de course.
+                    type: string
+                    example: Nome do curso
+    
+    Flashcards:
+      type: object
+      description: Objeto flashcard.
+      properties:
+        id:
+          description: Id do flashcard.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        question:
+          description: Questão do flashcard.
+          type: string
+          example: Pergunta?
+        answer:
+          description: Resposta do flashcard.
+          type: string
+          example: Resposta
+        category:
+          description: Categoria do flashcard.
+          type: string
+          example: Categoria
+    
+    BenefitsClub:
+      type: object
+      description: Objeto benefício.
+      properties:
+        id:
+          description: Id do benefício.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        benefit_name:
+          description: Nome do benefício.
+          type: string
+          example: Nome do benefício
+        benefit_description:
+          description: Descrição do benefício.
+          type: string
+          example: Descrição do benefício
+        benefit_end_date:
+          description: Data de finalização do benefício.
+          type: string
+          example: 2022-09-15
+        discount_percentage:
+          description: Porcentagem de desconto do benefício.
+          type: string
+          example: 10%
+        saved_amount:
+          description: Valor economizado com o benefício.
+          type: number
+          example: 50.99
+        benefit_link:
+          description: Link do benefício.
+          type: string
+          example: link do beneficio
+    
+    Users:
+      type: object
+      description: Objeto usuários.
+      properties:
+        id:
+          description: Id do usuário.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        email:
+          description: E-mail do usuário.
+          type: string
+          example: teste@email.com
+        first_name:
+          description: Nome do usuário.
+          type: string
+          example: José
+        last_name:
+          description: Sobrenome do usuário.
+          type: string
+          example: Silva
+        registration_date:
+          description: Data de registro do usuário.
+          type: string
+          example: "Sun, 10 Jul 2022 19:43:28 GMT"
+        is_active:
+          description: Representa se o usuário esta ativo ou desativado.
+          type: boolean
+          example: true
+        user_type:
+          description: Tipo do usuário.
+          type: string
+          example: student
+    
+    QuestionOpen:
+      type: object
+      description: Objeto questão.
+      properties:
+        id:
+          description: Id da questão.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        category:
+          description: Categoria da questão.
+          type: string
+          example: Categoria
+        question:
+          description: Pergunta da questão.
+          type: string
+          example: Pergunta?
+        question_type:
+          description: Tipo de questão (open_question).
+          type: string
+          example: open_question
+    QuestionMultipleChoice:
+      type: object
+      description: Objeto questão.
+      properties:
+        id:
+          description: Id da questão.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        category:
+          description: Categoria da questão.
+          type: string
+          example: Categoria
+        question:
+          description: Pergunta da questão.
+          type: string
+          example: Pergunta?
+        choices:
+          description: Lista de alternativas de resposta.
+          type: array
+          items:
+            type: string
+        correct_answer:
+          description: Resposta correta
+          type: string
+          example: Resposta
+        explanation:
+          description: Explicação da resposta.
+          type: string
+          example: Explicação
+        question_type:
+          description: Tipo de questão (multiple_choice_question).
+          type: string
+          example: multiple_choice_question
+    
+    QuestionOpenPut:
+      type: object
+      description: Objeto questão.
+      properties:
+        category:
+          description: Categoria da questão.
+          type: string
+          example: Categoria
+        question:
+          description: Pergunta da questão.
+          type: string
+          example: Pergunta?
+        question_type:
+          description: Tipo de questão (open_question).
+          type: string
+          example: open_question
+    QuestionMultipleChoicePut:
+      type: object
+      description: Objeto questão.
+      properties:
+        category:
+          description: Categoria da questão.
+          type: string
+          example: Categoria
+        question:
+          description: Pergunta da questão.
+          type: string
+          example: Pergunta?
+        choices:
+          description: Lista de alternativas de resposta.
+          type: array
+          items:
+            type: string
+        correct_answer:
+          description: Resposta correta
+          type: string
+          example: Resposta
+        explanation:
+          description: Explicação da resposta.
+          type: string
+          example: Explicação
+        question_type:
+          description: Tipo de questão (multiple_choice_question).
+          type: string
+          example: multiple_choice_question
+    
+    Simulated:
+      type: object
+      description: Objeto simulado.
+      properties:
+        id:
+          description: Id do simulado.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        title:
+          description: Titulo do simulado.
+          type: string
+          example: Simulado ABC
+        questions:
+          description: Lista de questões que fazem parte do simulado.
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                description: Id da questão.
+                type: string
+                example: 62b59b38d94c93885bb50738
+              points:
+                description: Valor de pontos da questão no simulado.
+                type: number
+                example: 1.0
+        duration:
+          description: Duração do simulado.
+          type: string
+          example: 2:30
+        categories:
+          description: Categorias do simulado.
+          type: array
+          items:
+            type: string
+    
+    Deck:
+      type: object
+      description: Objeto simulado.
+      properties:
+        id:
+          description: Id do simulado.
+          type: string
+          example: 62ba08afa859ec609b02ea25
+        title:
+          description: Titulo do deck.
+          type: string
+          example: Deck ABC
+        flashcards:
+          description: Lista de flashcards que fazem parte do deck.
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                description: Id do deck.
+                type: string
+                example: 62b59b38d94c93885bb50738
+        categories:
+          description: Categorias do deck.
+          type: array
+          items:
+            type: string
+
+    Ranking:
+      type: array
+      description: Lista que representa o ranking.
+      items:
+        type: object
+        description: Dados de um usuario no ranking.
+        properties:
+          id:
+            description: Id do usuario/aluno.
+            type: string
+            example: 62ba08afa859ec609b02ea25
+          first_name:
+            description: Primeiro nome do usuario.
+            type: string
+            example: Deck ABC
+          last_name:
+            description: Ultimo nome do usuario.
+            type: string
+          nickname:
+            description: Nickname do usuario
+            type: string
+          points:
+            description: Ponto do usuario nesse ranking.
+            type: string
+          position:
+            description: Posição do usuario nesse ranking.
+            type: string
+          performance:
+            description: Desempenho do usuario nesse ranking.
+            type: string
+  
+  
+
+
+

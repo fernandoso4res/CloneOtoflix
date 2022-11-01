@@ -1,0 +1,31 @@
+// DB cursos
+// Collection discount club
+
+{
+    "_id": "id do desconto",
+    "Nome": "Nome do descont",
+    "Descrição": "Descrição do desconto",
+    "end_date": "2022-09-15", //Data de expiração do beneficio
+    "Porcentagem_desconto": "10%",
+    "Valor_economizado": "50.00",
+    "Link_beneficio": "link do beneficio"
+}
+
+
+{
+    "_id": "id do desconto",
+    "benefit_name": "Nome do descont",
+    "benefit_description": "Descrição do desconto",
+    "benefit_end_date": "2022-09-15",
+    "discount_percentage": "10%",
+    "saved_amount": "50.00",
+    "benefit_link": "link do beneficio"
+}
+
+
+benefit name
+benefit description
+benefit end date
+discount percentage
+saved amount
+benefit link

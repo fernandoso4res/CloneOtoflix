@@ -1,0 +1,35 @@
+// DB Users
+// Collection Usuário - Professor
+
+{
+    "_id": "id do usuário",
+    "Nome": "Nome do usuário",
+    "Email": "Email do usuário",
+    "Senha": "Senha do usuário", // Usar o bcrypt
+    "Foto_perfil": "Url da foto de perfil",
+    "Tipo_usuario": "Professor",     
+    "Token ": "token JWT de login", // token JWT de login que esta em uso atualmente pelo usuário
+    "Data_cadastro": "Data de cadastro do usuário", // Preenchido automaticamente pelo backend
+    "Notificações_novas": [], // Lista das novas notificações que ainda não foram lidas
+    "Notificações_lidas": [], // Lista das notificações antigas que ja foram lindas
+    "Receita": "Receita recebida pelo professor",
+    "Show_receita": false, 
+    "Cursos": [
+        {
+            "_id": "id do curso",
+            "Nome": "Nome do curso"           
+        }
+    ],
+    "Alunos" : [
+        {
+            "id_aluno": "id do aluno",
+            "Nome_aluno": "Nome do aluno",
+            "Cursos": [
+                {
+                    "_id": "id do curso",
+                    "Nome": "Nome do curso"
+                }
+            ]
+        }
+    ] 
+}

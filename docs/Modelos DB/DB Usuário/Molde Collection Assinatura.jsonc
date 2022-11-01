@@ -1,0 +1,29 @@
+// DB Users
+// Collection Assinatura
+
+{
+    "subscription_name": "Nome da assinatura",
+    "subscription_description": "Descrição da assinatura.",
+    "subscription_price": "1.200,00",   // Valor da assinatura
+    "subscription_duration_unit": "meses",  // Unidade de medida da duração da assinatura (dia(a), mes(es) ano(s)).
+    "subscription_duration_value": 5, // Numero interiro que repesenta o a duração da assinatura junto com a unidade
+    "subscription_permissions": {
+        "certificates": true,
+        "analysis": true,
+        "benefits_club": true,
+        "flashcards": true,
+        "simulations": true,
+        "questions_database": true,
+        "images_database": true,
+        "mentoring": true,
+        "monitoring": true,
+        "simulation_ranking": true,
+        "general_ranking": true,
+        "courses": [
+            {
+                "course_id": "62b59b38d94c93885bb50738",
+                "course_name": "Nome do curso"
+            }
+        ]
+    }
+}

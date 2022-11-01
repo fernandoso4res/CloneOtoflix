@@ -1,0 +1,128 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - 27017:27017
+
+  mongo_express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_URL: ${MONGODB_URL}
+    
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+  
+  localstack:
+    image: localstack/localstack
+    restart: always
+    environment:
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      SERVICES: ${AWS_SERVICES}
+      EDGE_PORT: 4566
+    ports:
+      - '4566-4583:4566-4583'
+    volumes:
+      - "${TEMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+        - 5672:5672
+        - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASS: ${RABBITMQ_PASS}
+    volumes:
+      - ./scripts/init/rabbit_init.sh:/scrips/init.sh
+    command: ["bin/bash", "/scrips/init.sh"]
+    
+  ms_send_mail:
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    build: 
+      context: ./otoflix/async_microservices/queues/send_mail
+    restart: always
+    environment:
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_DEFAULT_SENDER: ${MAIL_DEFAULT_SENDER}
+    volumes:
+        - ./otoflix/async_microservices/queues/send_mail:/app 
+  
+  flask:
+    depends_on:
+      - mongo
+      - redis
+      - localstack
+      - rabbitmq
+    links:
+      - mongo
+      - redis
+      - localstack
+      - rabbitmq
+    build: 
+      context: ./otoflix/api
+    restart: always
+    ports:
+        - 5000:5000
+    environment:
+      MONGO_URI_USERS: ${MONGO_URI_USERS}
+      MONGO_URI_COURSES: ${MONGO_URI_COURSES}
+      MONGO_URI_QUESTIONS: ${MONGO_URI_QUESTIONS}
+      MONGO_URI_BENEFITS_CLUB: ${MONGO_URI_BENEFITS_CLUB}
+
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+
+      JWT_TOKEN_LOCATION: ${JWT_TOKEN_LOCATION}
+      JWT_COOKIE_SECURE: ${JWT_COOKIE_SECURE}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_ACCESS_TOKEN_EXPIRES: ${JWT_ACCESS_TOKEN_EXPIRES}
+      JWT_REFRESH_EXPIRES: ${JWT_REFRESH_EXPIRES}
+
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_URL: ${AWS_URL}
+
+      CERTIFICATE_BACKGROUND_IMAGE_URL: ${CERTIFICATE_BACKGROUND_IMAGE_URL}
+      CERTIFICATE_FONT_PERSON_NAME_URL: ${CERTIFICATE_FONT_PERSON_NAME_URL}
+      CERTIFICATE_FONT_COURSE_NAME_URL: ${CERTIFICATE_FONT_COURSE_NAME_URL}
+      CERTIFICATE_FONT_COURSE_HOURS_URL: ${CERTIFICATE_FONT_COURSE_HOURS_URL}
+      CERTIFICATE_FONT_COMPLETION_DATE_URL: ${CERTIFICATE_FONT_COMPLETION_DATE_URL}
+    volumes:
+        - ./otoflix/api:/app 

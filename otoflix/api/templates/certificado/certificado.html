@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <style type="text/css">
+            html, body {
+                width: 2500px;
+                height: 1767px;
+                margin: 0;
+                padding: 0;
+                background-image: url({{certificate_background_image_url}});
+                background-repeat: no-repeat;
+            }
+            @font-face {
+            font-family: person;
+            src: url({{certificate_font_person_name_url}});
+            }
+            @font-face {
+            font-family: course-name;
+            src: url({{certificate_font_course_name_url}});
+            }
+            @font-face {
+            font-family: course-hours;
+            src: url({{certificate_font_course_hours_url}});
+            }
+            @font-face {
+            font-family: completion-date;
+            src: url({{certificate_font_completion_date_url}});
+            }
+            
+            body {                
+                display: table;
+                font-family: Georgia, serif;
+                font-size: 24px;
+                text-align: center;
+            }
+            .person {
+                /* border-bottom: 2px solid black; */
+                color: black;
+                font-family: person;
+                font-size: 80px;
+                margin: 20px auto;
+                width: 1130px;
+                position: absolute;
+                left: 980;
+                top: 927;
+            }
+            .course-name {
+                /* border-bottom: 2px solid black; */
+                color: #b69156;
+                font-size: 35.5px;
+                font-family: course-name;
+                letter-spacing: 3px;
+                line-height: 40px;
+                text-align: left;
+                margin: 20px auto;
+                width: 950px;
+                position: absolute;
+                left: 1037;
+                top: 710;
+            }
+            .course-hours {
+                /* border-bottom: 2px solid black; */
+                color: black;
+                font-size: 23.5px;
+                font-family: course-hours;
+                letter-spacing: 3.5px;
+                font-weight: 600;
+                text-align: left;
+                margin: 20px auto;
+                width: 500px;
+                position: absolute;
+                left: 1340;
+                top: 1082;
+            }
+            .completion-date {
+                /* border-bottom: 2px solid black; */
+                color: black;
+                font-size: 50px;
+                font-family: completion-date;
+                margin: 20px auto;
+                width: 635px;
+                position: absolute;
+                left: 400;
+                top: 1320;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="person">
+                {{first_name}} {{last_name}}
+            </div>
+            <div class="course-name">
+                {{course_name}}
+            </div>
+            <div class="course-hours">
+                CARGA HORÁRIA: {{course_hours}}
+            </div>
+            <div class="completion-date">
+                {{completion_date}}
+            </div>
+        </div>
+    </body>
+</html>

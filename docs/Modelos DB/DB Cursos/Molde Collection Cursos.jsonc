@@ -1,0 +1,73 @@
+// DB Cursos
+// Collection Cursos
+
+{
+    "_id": "id do curso",
+    "Nome": "Nome Curso",
+    "Descrição": "Descrição curso",
+    "Nome_Professor": "Nome professor",
+    "Status": false,  // Define se o curso esta ativo ou não (true = ativo, false = inativo)
+    "start-data": "2022-04-15", //Data para ativar o curso automaticamente
+    "end-data": "2022-10-15", // Para desativar o curso automaticamente
+    "liberar_apos": 14, // Liberar o curso após x dias de acesso
+    "last-update": "22-05-01", //Preenchido automaticamente pelo backend (Data do ultimo update no curso)
+    "show_last_update": true, // Determina se mostrar ou não a data do ultimo update no curso
+    "Imagen": "utl da imagem do curso",  // url da imagem do curso
+    "Duração_total": "34:00:00", //Preenchido automaticamente pelo backend (Soma do tempo de todas as aulas)
+    "Grupo_do_curso": [
+        {
+            "id_grupo": "id do grupo",
+            "Nome_grupo": "Nome do grupo"
+        }
+    ],
+    "Numero_alunos_matriculados": 0, //Preenchido automaticamente pelo backend (Numero de alunos que estão matriculados no curso)
+    "Avaliações":{
+        "Media_das_avaliações": "4,5",
+        "Comentarios_de_avaliação": [
+            {
+                "id_": "id de quem avaliou", //id de quem fez a avaliação
+                "Nome": "Nome de quem avaliou",
+                "Foto_de_perfil": "Url da foto de perfil", // Url da foto de perfil de quem avaliou
+                "Avaliacao": "Avaliação",
+                "Nota":"5"
+            }
+        ]
+    },
+    "Modulos": [
+        {
+            "_id": "id do modulo",
+            "Nome": "Modulo 1",
+            "liberar_apos": 14, // Liberar o modulo após x dias de acesso
+            "Duração_modulo": "4:00:00", //Preenchido automaticamente pelo backend (Soma do tempo de todas as aulas)
+            "Aulas": [
+                {
+                    "_id": "id da aula",
+                    "Titulo": "Aula 1",
+                    "Duração_Aula": "00:12:28", //Preenchido automaticamente
+                    "Video": "video", // Url vídeo
+                    "liberar_apos": 14 // Liberar aula após x dias de acesso
+                },
+                {
+                    "Titulo": "Aula 2",
+                    "Duração": "00:10:38", //Preenchido automaticamente
+                    "Video": "video",
+                    "liberar_apos": 14 // Liberar aula após x dias de acesso
+                }
+            ]
+        },
+        {
+            "_id": "id do modulo",
+            "Nome":"Modulo 2",
+            "liberar_apos": 14, // Liberar o modulo após x dias de acesso
+            "Aulas":[
+                {
+                    "_id": "id da aula",
+                    "Titulo": "Aula 1",
+                    "Duração_Aula": "00:15:08", //Preenchido automaticamente
+                    "Video": "video", // Url vídeo
+                    "liberar_apos": 14 // Liberar aula após x dias de acesso
+                }
+            ]
+        }
+    ]
+}

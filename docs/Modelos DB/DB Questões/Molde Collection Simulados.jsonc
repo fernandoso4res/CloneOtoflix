@@ -1,0 +1,23 @@
+// DB Questões
+// Collection Simulados
+
+{
+    "_id": "id do simulado",
+    "id_Criador": "id do criador do simulado",
+    "Criador": "Nome do criador",
+    "Data_criação": "2022-05-01", // Data de criação
+    "Tempo_limite": "02:00:00", // Tempo limite para a realização do simulado
+    "Categorias": ["Categoria1", "Categoria2"], // Gerado pelo backend, baseado nas questões inseridas
+    "Questões": [
+        {
+            "_id": "id da questão",
+            "Categoria": "Categoria",
+            "Enunciado": "Pergunta",
+            "Imagem": "url da imagem", // url imagem (opcional)
+            "Video": "url do video", // url vídeo (opcional)
+            "Resposta_correta": "Resposta",
+            "Explicação" : "Explicação",
+            "Alternativas":["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D", "Alternativa E"]
+        }
+    ]
+}

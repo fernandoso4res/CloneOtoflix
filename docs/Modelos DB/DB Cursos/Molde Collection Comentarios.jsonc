@@ -1,0 +1,42 @@
+// DB 
+// Collection Comentários
+
+{
+    "id_": "id de quem comentou", //id de quem fez o comentário
+    "Nome": "Nome",
+    "Foto_de_perfil": "Url da foto de perfil", // Url da foto de perfil de quem comentou
+    "Comentario": "Comentário",
+    "Criado": "20-04-2022", // Preenchido automaticamente pelo backend
+    "id_aula": "id da aula", // id da aula que foi comentada
+    "id_curso": "id do curso", // id do curso que foi comentado
+    
+    "Respostas": []
+}
+
+
+
+
+// Collection Comentarios com respostas
+{
+    "id_": "id de quem comentou", //id de quem fez o comentário
+    "Nome": "Nome",
+    "Foto_de_perfil": "Url da foto de perfil", // Url da foto de perfil de quem comentou
+    "Comentario": "Comentário com duvidada",
+    "Criado": "20-04-2022", // Preenchido automaticamente pelo backend
+    "Respostas": [
+        {
+            "id_": "id de quem comentou", //id de quem fez o comentário
+            "Nome": "Nome",
+            "Foto_de_perfil": "Url da foto de perfil", // Url da foto de perfil de quem comentou
+            "Comentario": "Comentário de resposta1",
+            "Criado": "21-04-2022" // Preenchido automaticamente pelo backend
+        },
+        {
+            "id_": "id de quem comentou", //id de quem fez o comentário
+            "Nome": "Nome",
+            "Foto_de_perfil": "Url da foto de perfil", // Url da foto de perfil de quem comentou
+            "Comentario": "Comentario de resposta2",
+            "Criado": "21-04-2022" // Preenchido automaticamente pelo backend
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+// DB cursos
+// Collection Ranking - Simulados
+
+{    
+    "id_aluno": "id do aluno",
+    "Nome_aluno": "Nome do aluno",
+    "Pontos": 100,
+    "Imagem_de_perfil": "url da imagem de perfil",
+    "Nickname":"nickname do aluno"
+}
