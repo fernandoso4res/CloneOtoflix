@@ -52,6 +52,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PostResponseGenerico'
+  /modules:
+    post:
+      tags:
+        - Modules
+      summary: Cadastro de módulo
+      description: Realiza cadastro de um módulo
+      security:
+        - access_token_cookie: []
+        - X-CSRF-TOKEN: []
+      requestBody:
+        $ref: '#/components/requestBodies/Modules'
+      responses:
+        '201':
+          description: Módulo criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponseGenerico'
 
                                                                                           
 #Auth

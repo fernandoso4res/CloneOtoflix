@@ -16,6 +16,7 @@ def create_app():
     from routes.rankings_route import bp as rankings_bp
     from routes.students_route import bp as students_bp
     from routes.courses_route import bp as courses_bp
+    from routes.modules_route import bp as modules_bp
 
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
@@ -38,7 +39,7 @@ def create_app():
     app.register_blueprint(rankings_bp, url_prefix=app.config['URL_PREFIX']+'/rankings')
     app.register_blueprint(students_bp, url_prefix=app.config['URL_PREFIX']+'/students')
     app.register_blueprint(courses_bp, url_prefix=app.config['URL_PREFIX']+'/courses')
-
+    app.register_blueprint(modules_bp, url_prefix=app.config['URL_PREFIX']+'/modules')
 
     # print(app.config)
     return app

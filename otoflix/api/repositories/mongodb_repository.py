@@ -6,6 +6,8 @@ from ext.database import users_db, courses_db, questions_db, benefits_club_bd
 
 def get_collection(collection):
     match collection:
+        case 'modules':
+            return courses_db.db.courses
         case 'users':
             return users_db.db.users
         case 'subscriptions':
