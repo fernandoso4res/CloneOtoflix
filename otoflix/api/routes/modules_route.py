@@ -13,3 +13,17 @@ def post_modules():
 #@jwt_required()
 def get_modules():
     return modules_controller.get_modules()
+
+@bp.route('/<id>', methods=['GET'])
+def get_modules_id(id):
+    return modules_controller.get_modules_id(id)
+
+@bp.route('/<id>', methods=['PUT'])
+#@jwt_required()
+def put_modules_id(id):
+    return modules_controller.put_modules_id(id)
+
+@bp.route('/<id>', methods=['DELETE'])
+#@jwt_required()
+def delete_modules_id(id):
+    return modules_controller.delete_modules_id(id)

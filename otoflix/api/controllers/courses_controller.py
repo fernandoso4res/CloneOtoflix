@@ -8,7 +8,7 @@ from repositories.mongodb_repository import check_if_exists, fields_of_query_par
 def post_courses():
     try:
         data = request.get_json()
-        required_allowed_keys = ['name', 'title', 'description', 'image']
+        required_allowed_keys = ["name", "description", "image", "teacher_name", "creator", "modules_id"]
         check_required_keys(data, required_allowed_keys)
         data = check_allowed_keys(data, required_allowed_keys)
         id = insert_one('courses', data)
@@ -49,7 +49,7 @@ def get_courses_id(id):
 def put_courses_id(id):
     try:
         data = request.get_json()
-        required_allowed_keys = ['name', 'title', 'description', 'image', 'name_teacher', 'creator']
+        required_allowed_keys = ['name', 'description', 'image', 'teacher_name', 'creator']
         check_required_keys(data, required_allowed_keys)
         data = check_allowed_keys(data, required_allowed_keys)
         if not check_if_exists('courses', id=id):

@@ -8,10 +8,10 @@ from repositories.mongodb_repository import check_if_exists, fields_of_query_par
 def post_modules():
     try:         
         data = request.get_json()
-        required_allowed_keys = ['Modulos:{"nome", "liberar_apos"}']
+        required_allowed_keys = [{"_id": "Curso de NodeJS"}, "modulo_id"]
         check_required_keys(data, required_allowed_keys)
         data = check_allowed_keys(data, required_allowed_keys)
-        id = insert_one('Modulos', data)
+        id = insert_one('courses', data)
         return jsonify(msg="Module succesfully registered", id=id), 201
     except Exception as e:
         response = errors(e)
@@ -19,6 +19,7 @@ def post_modules():
             return response
         else:  
             return jsonify(msg="Error creating module"), 500
+
 
 
 def get_modules():
@@ -33,3 +34,49 @@ def get_modules():
             return response
         else:
             return jsonify(msg="Error searching modules"), 500
+
+
+def get_modules_id(id):
+    try:
+        query_params = dict(request.args)
+        fields = fields_of_query_param(query_params)
+        return jsonify(find_one('modules', *fields, id=id)), 200
+    except Exception as e:
+        response = errors(e)
+        if response:
+            return response
+        else:
+            return jsonify(msg="Error searching modules"), 500
+
+
+def put_modules_id(id):
+    try:
+        data = request.get_json()
+        required_allowed_keys = ["nome", "liberacao_modulo"]
+        check_required_keys(data, required_allowed_keys)
+        data = check_allowed_keys(data, required_allowed_keys)
+        if not check_if_exists('modules', id=id):
+            return jsonify(msn='Module not found'), 404
+        replace_one('modules', data, id=id)
+        return jsonify(msg="Module successfully updated"), 200
+    except Exception as e:
+        response = errors(e)
+        if response:
+            return response
+        else:
+            return jsonify(msg="Error updating module"), 500
+
+
+
+def delete_modules_id(id):
+    try:
+        if not check_if_exists('modules', id=id):
+            return jsonify(msn='Module not found'), 404
+        delete_one('modules', id=id)
+        return jsonify(msg="Módulo excluído com sucesso"), 200   
+    except Exception as e:
+        response = errors(e)
+        if response:
+            return response
+        else:
+            return jsonify(msg="Error deleting module"), 500
