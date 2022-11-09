@@ -6,8 +6,10 @@ from ext.database import users_db, courses_db, questions_db, benefits_club_bd
 
 def get_collection(collection):
     match collection:
+        case 'classes':
+            return classes_db.db.classes
         case 'modules':
-            return courses_db.db.courses
+            return courses_db.db.modules
         case 'users':
             return users_db.db.users
         case 'subscriptions':
@@ -57,6 +59,11 @@ def find_one(collection, *fields: str, **filter):
         result['_id'] = str(result['_id'])
         result['id'] = result.pop('_id')
     return result
+
+def insert_many(collection, data):
+    collection = get_collection(collection)
+    collection = insert_many(data)
+    return str(data['_id'])
 
 def insert_one(collection, data):
     collection = get_collection(collection)

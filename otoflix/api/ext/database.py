@@ -7,8 +7,7 @@ import redis
 users_db = PyMongo()
 courses_db = PyMongo()
 questions_db = PyMongo()
-benefits_club_bd = PyMongo()
-#modules_db = PyMongo()
+benefits_club_bd = PyMongo
 
 
 def init_app(app):

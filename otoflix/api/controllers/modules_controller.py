@@ -8,10 +8,10 @@ from repositories.mongodb_repository import check_if_exists, fields_of_query_par
 def post_modules():
     try:         
         data = request.get_json()
-        required_allowed_keys = [{"_id": "Curso de NodeJS"}, "modulo_id"]
+        required_allowed_keys = ["name", "title", "course_id"]
         check_required_keys(data, required_allowed_keys)
         data = check_allowed_keys(data, required_allowed_keys)
-        id = insert_one('courses', data)
+        id = insert_one('modules', data)
         return jsonify(msg="Module succesfully registered", id=id), 201
     except Exception as e:
         response = errors(e)
@@ -19,9 +19,7 @@ def post_modules():
             return response
         else:  
             return jsonify(msg="Error creating module"), 500
-
-
-
+                              
 def get_modules():
     try:
         query_params = dict(request.args)
@@ -52,7 +50,7 @@ def get_modules_id(id):
 def put_modules_id(id):
     try:
         data = request.get_json()
-        required_allowed_keys = ["nome", "liberacao_modulo"]
+        required_allowed_keys = ["name", "title", "course_id"]
         check_required_keys(data, required_allowed_keys)
         data = check_allowed_keys(data, required_allowed_keys)
         if not check_if_exists('modules', id=id):
